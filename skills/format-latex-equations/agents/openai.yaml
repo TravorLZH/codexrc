@@ -1,0 +1,4 @@
+interface:
+  display_name: "LaTeX Equation Conventions"
+  short_description: "Apply preferred LaTeX equation formatting"
+  default_prompt: "Use $format-latex-equations to format these equations according to my conventions."
