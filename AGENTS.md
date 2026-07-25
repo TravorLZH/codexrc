@@ -11,3 +11,5 @@ When creating, editing, or reviewing global Codex instructions or custom skills,
 - Edit `~/codexrc/AGENTS.md` for global Codex instructions.
 - Edit `~/codexrc/skills/<skill-name>/` for custom skills.
 - Do not edit generated Codex state, auth, logs, sessions, caches, or plugin runtime files for customization changes.
+
+Before editing global Codex instructions or custom skills, check whether `~/codexrc` has uncommitted changes or is behind `origin/master`. Do not pull, rebase, or overwrite local changes unless the user asks.
