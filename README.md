@@ -13,13 +13,16 @@ marketplace data, project trust entries, or machine-specific config.
 
 ## Install
 
-Clone the repository, then run the installer:
+Clone the repository to `~/codexrc`, then run the installer:
 
 ```sh
 git clone git@github.com:TravorLZH/codexrc.git ~/codexrc
 cd ~/codexrc
 ./install.sh
 ```
+
+The repository path is intentionally fixed at `~/codexrc` so Codex can use that
+directory as the source of truth when updating global agents and custom skills.
 
 The installer creates symlinks:
 
