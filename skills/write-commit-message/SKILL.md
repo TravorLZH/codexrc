@@ -31,6 +31,23 @@ description: Draft or suggest Git commit messages in TravorLZH's established sty
 
 ## Examples
 
+### Command-Line Example
+
+Use this pattern to create a commit from the command line when the message has a body. The message content inside the `EOF` block should follow the style shown in the message examples below.
+
+```bash
+cat > /tmp/commit-message.txt <<'EOF'
+Fix request timeout handling
+
+* src/client.ts: Apply the configured timeout to fetch requests and surface timeout failures as retryable errors.
+* test/client.test.ts: Cover timeout propagation and retry classification.
+EOF
+git commit -F /tmp/commit-message.txt
+git show --format=%B --no-patch HEAD
+```
+
+### Message Examples
+
 ```text
 Fix release cleanup permissions
 
