@@ -8,6 +8,7 @@ This repository stores only durable Codex behavior:
 - `bin/` for narrowly scoped helper commands used by those instructions.
 - `skills/` for custom reusable Codex skills.
 - `install.sh` for linking this repo into `~/.codex`.
+- `install-rules.sh` for generating local Codex command approval rules.
 
 It intentionally does not store Codex auth, logs, sessions, runtime state, caches,
 marketplace data, project trust entries, or machine-specific config.
@@ -108,6 +109,16 @@ The installer creates symlinks:
 ~/.codex/AGENTS.md -> ~/codexrc/AGENTS.md
 ~/.codex/skills/<skill> -> ~/codexrc/skills/<skill>
 ```
+
+To install local approval rules for the Vim helper commands, run:
+
+```sh
+./install-rules.sh
+```
+
+This writes `~/.codex/rules/codexrc.rules` with absolute helper paths resolved
+from the current checkout, so the shared repo does not need to hardcode a home
+directory.
 
 If an existing target is present, it is moved to:
 
