@@ -13,25 +13,48 @@ fi
 
 # No Vim executable means there is no editor state to inspect.
 if ! command -v vim >/dev/null 2>&1; then
-    exit 0
+    echo "vim-check-modified: Vim executable not found" >&2
+    exit 2
 fi
 
-if ! servers=$(vim --serverlist 2>/dev/null); then
+if ! servers=$(vim --serverlist 2>&1); then
     echo "vim-check-modified: could not list Vim servers" >&2
-    exit 2
+    printf '%s\n' "$servers" >&2
+    exit 4
 fi
 
 # A missing server is normal when Vim is not running.
 if ! printf '%s\n' "$servers" | grep -Fqx -- "$server"; then
-    exit 0
+    echo "vim-check-modified: Vim server '$server' not found" >&2
+    exit 3
 fi
 
 # Ask Vim for absolute, resolved paths of named modified buffers.
-expr="join(map(filter(getbufinfo({'bufmodified': 1}), '!empty(v:val.name)'), 'resolve(fnamemodify(v:val.name, \":p\"))'), \"\\n\")"
-if ! modified=$(vim --servername "$server" --remote-expr "$expr" 2>/dev/null); then
+marker=__VIM_CHECK_MODIFIED_OK__
+expr="'$marker' . \"\\n\" . join(map(filter(getbufinfo({'bufmodified': 1}), '!empty(v:val.name)'), 'resolve(fnamemodify(v:val.name, \":p\"))'), \"\\n\")"
+if ! response=$(vim --servername "$server" --remote-expr "$expr" 2>&1); then
     echo "vim-check-modified: could not query Vim server '$server'" >&2
-    exit 2
+    printf '%s\n' "$response" >&2
+    exit 5
 fi
+
+# Vim can exit successfully even when --remote-expr cannot connect. Validate
+# the response marker before treating the remainder as the modified-file list.
+newline='
+'
+case "$response" in
+    "$marker")
+        modified=
+        ;;
+    "$marker$newline"*)
+        modified=${response#"$marker$newline"}
+        ;;
+    *)
+        echo "vim-check-modified: Vim server '$server' returned no valid success marker" >&2
+        printf '%s\n' "$response" >&2
+        exit 5
+        ;;
+esac
 
 status=0
 for target in "$@"; do
@@ -39,7 +62,7 @@ for target in "$@"; do
     target_name=$(basename "$target")
     if ! target_dir=$(CDPATH= cd -P "$(dirname "$target")" 2>/dev/null && pwd); then
         echo "vim-check-modified: could not resolve target '$target'" >&2
-        exit 2
+        exit 6
     fi
     target=$target_dir/$target_name
 

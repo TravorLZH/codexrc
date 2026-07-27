@@ -18,14 +18,18 @@ Before editing global Codex instructions or custom skills, check whether `~/code
 
 Before editing existing files, run `~/codexrc/bin/vim-check-modified <file>...` with every intended existing target file as an argument.
 
-- Exit status 0 means none of the target files has unsaved changes in the active Vim server, or no Vim server is running; proceed.
+- Exit status 0 means the active Vim server was queried successfully and none of the target files has unsaved changes; proceed.
 - Exit status 1 means one or more target files has unsaved changes in Vim. Do not edit those files. Report the paths printed by the helper and wait for the user to save or discard the changes.
-- Exit status 2 means an active Vim server was found but could not be queried. Do not edit the target files until the check succeeds. If sandboxing blocked access to the server, rerun the helper with the required escalation.
+- Exit status 2 means no Vim executable is available, so there is no Vim state to inspect; proceed.
+- Exit status 3 means the configured Vim server is not running; proceed.
+- Exit status 4 means Vim servers could not be listed. Read the helper's error message and do not edit the target files until the check succeeds. If sandboxing caused the failure, rerun the helper with the required escalation.
+- Exit status 5 means the configured Vim server was found but the query failed or returned an invalid response. Read the helper's error message and do not edit the target files until the check succeeds. If sandboxing caused the failure, rerun the helper with the required escalation.
+- Exit status 6 means a target path could not be resolved. Read the helper's error message, correct the path, and rerun the check before editing.
 - Exit status 64 means the helper was called incorrectly; fix the invocation before editing.
 
 Run the check again before a later edit if the set of intended target files changes.
 
-After editing files successfully, run `~/codexrc/bin/vim-checktime` so the active Vim server immediately checks for external changes. Run it once after each coherent batch of file edits. If sandboxing blocks access to the server, rerun the helper with the required escalation. If an active Vim server cannot be queried after retrying, report the failure to the user.
+After editing files successfully, run `~/codexrc/bin/vim-checktime` so the active Vim server immediately checks for external changes. Run it once after each coherent batch of file edits. Exit status 0 means the server completed the check. Exit statuses 2 and 3 mean no refresh is needed because Vim or the configured server is unavailable. Exit statuses 4 and 5 require reading the helper's error message and retrying with the required escalation if sandboxing caused the failure. If an active Vim server cannot be queried after retrying, report the failure to the user.
 
 # LaTeX compilation
 

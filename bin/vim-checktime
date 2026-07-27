@@ -8,21 +8,36 @@ server=${VIM_SERVERNAME:-VIM}
 
 # No Vim executable means there is no editor state to refresh.
 if ! command -v vim >/dev/null 2>&1; then
-    exit 0
+    echo "vim-checktime: Vim executable not found" >&2
+    exit 2
 fi
 
-if ! servers=$(vim --serverlist 2>/dev/null); then
+if ! servers=$(vim --serverlist 2>&1); then
     echo "vim-checktime: could not list Vim servers" >&2
-    exit 2
+    printf '%s\n' "$servers" >&2
+    exit 4
 fi
 
 # A missing server is normal when Vim is not running.
 if ! printf '%s\n' "$servers" | grep -Fqx -- "$server"; then
-    exit 0
+    echo "vim-checktime: Vim server '$server' not found" >&2
+    exit 3
 fi
 
-# A remote expression leaves the current Vim mode unchanged.
-if ! vim --servername "$server" --remote-expr "execute('checktime')" >/dev/null 2>&1; then
+# Vim can exit successfully even when --remote-expr cannot connect, so require a
+# marker that is emitted only after the expression runs in the server.
+marker=__VIM_CHECKTIME_OK__
+if ! response=$(vim --servername "$server" --remote-expr "execute('checktime | redraw!') . \"\\n$marker\"" 2>&1); then
     echo "vim-checktime: could not query Vim server '$server'" >&2
-    exit 2
+    printf '%s\n' "$response" >&2
+    exit 5
 fi
+case "$response" in
+    *"$marker")
+        ;;
+    *)
+        echo "vim-checktime: Vim server '$server' returned no success marker" >&2
+        printf '%s\n' "$response" >&2
+        exit 5
+        ;;
+esac
