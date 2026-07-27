@@ -12,6 +12,25 @@ This repository stores only durable Codex behavior:
 It intentionally does not store Codex auth, logs, sessions, runtime state, caches,
 marketplace data, project trust entries, or machine-specific config.
 
+## Included Skills
+
+### `format-latex-equations`
+
+Applies consistent mathematical LaTeX conventions when Codex writes, edits,
+converts, or reviews equations. It covers inline and display delimiters,
+inequalities, differentials, fractions, `\substack` line breaks, and paragraph
+wrapping. See
+[`skills/format-latex-equations/SKILL.md`](skills/format-latex-equations/SKILL.md)
+for the complete rules.
+
+### `write-commit-message`
+
+Drafts and evaluates Git commit messages from the staged diff and recent
+history. It uses concise imperative subjects and, for nontrivial changes,
+file-oriented body bullets in the repository's established style. See
+[`skills/write-commit-message/SKILL.md`](skills/write-commit-message/SKILL.md)
+for the complete rules.
+
 ## Vim Integration
 
 Codex checks intended edit targets for unsaved Vim changes with
