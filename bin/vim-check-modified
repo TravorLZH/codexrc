@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -eu
+
+server=${VIM_SERVERNAME:-VIM}
+
+if [ "$#" -eq 0 ]; then
+    echo "usage: vim-check-modified FILE..." >&2
+    exit 64
+fi
+
+if ! command -v vim >/dev/null 2>&1; then
+    exit 0
+fi
+
+if ! servers=$(vim --serverlist 2>/dev/null); then
+    echo "vim-check-modified: could not list Vim servers" >&2
+    exit 2
+fi
+
+if ! printf '%s\n' "$servers" | grep -Fqx -- "$server"; then
+    exit 0
+fi
+
+expr="join(map(filter(getbufinfo({'bufmodified': 1}), '!empty(v:val.name)'), 'resolve(fnamemodify(v:val.name, \":p\"))'), \"\\n\")"
+if ! modified=$(vim --servername "$server" --remote-expr "$expr" 2>/dev/null); then
+    echo "vim-check-modified: could not query Vim server '$server'" >&2
+    exit 2
+fi
+
+status=0
+for target in "$@"; do
+    if command -v realpath >/dev/null 2>&1; then
+        target=$(realpath -m -- "$target")
+    else
+        case $target in
+            /*) ;;
+            *) target=$PWD/$target ;;
+        esac
+    fi
+
+    if printf '%s\n' "$modified" | grep -Fqx -- "$target"; then
+        printf '%s\n' "$target"
+        status=1
+    fi
+done
+
+exit "$status"
