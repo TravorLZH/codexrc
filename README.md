@@ -75,7 +75,7 @@ Codex sessions may require approval for the helpers to connect.
 Clone the repository to `~/codexrc`, then run the installer:
 
 ```sh
-git clone git@github.com:TravorLZH/codexrc.git ~/codexrc
+git clone https://github.com/TravorLZH/codexrc.git ~/codexrc
 cd ~/codexrc
 ./install.sh
 ```

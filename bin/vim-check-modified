@@ -1,4 +1,6 @@
 #!/bin/sh
+#
+# vim-check-modified - report target files with unsaved changes in Vim
 
 set -eu
 
@@ -9,6 +11,7 @@ if [ "$#" -eq 0 ]; then
     exit 64
 fi
 
+# No Vim executable means there is no editor state to inspect.
 if ! command -v vim >/dev/null 2>&1; then
     exit 0
 fi
@@ -18,10 +21,12 @@ if ! servers=$(vim --serverlist 2>/dev/null); then
     exit 2
 fi
 
+# A missing server is normal when Vim is not running.
 if ! printf '%s\n' "$servers" | grep -Fqx -- "$server"; then
     exit 0
 fi
 
+# Ask Vim for absolute, resolved paths of named modified buffers.
 expr="join(map(filter(getbufinfo({'bufmodified': 1}), '!empty(v:val.name)'), 'resolve(fnamemodify(v:val.name, \":p\"))'), \"\\n\")"
 if ! modified=$(vim --servername "$server" --remote-expr "$expr" 2>/dev/null); then
     echo "vim-check-modified: could not query Vim server '$server'" >&2
@@ -30,16 +35,32 @@ fi
 
 status=0
 for target in "$@"; do
-    if command -v realpath >/dev/null 2>&1; then
-        target=$(realpath -m -- "$target")
-    else
-        case $target in
-            /*) ;;
-            *) target=$PWD/$target ;;
-        esac
+    # Resolve the parent directory without relying on GNU realpath.
+    target_name=$(basename "$target")
+    if ! target_dir=$(CDPATH= cd -P "$(dirname "$target")" 2>/dev/null && pwd); then
+        echo "vim-check-modified: could not resolve target '$target'" >&2
+        exit 2
     fi
+    target=$target_dir/$target_name
 
-    if printf '%s\n' "$modified" | grep -Fqx -- "$target"; then
+    target_modified=0
+    old_ifs=$IFS
+    IFS='
+'
+    for buffer in $modified; do
+        # File identity catches paths that reach the same file through symlinks.
+        if [ "$buffer" = "$target" ]; then
+            target_modified=1
+            break
+        fi
+        if [ -e "$buffer" ] && [ -e "$target" ] && [ "$buffer" -ef "$target" ]; then
+            target_modified=1
+            break
+        fi
+    done
+    IFS=$old_ifs
+
+    if [ "$target_modified" -eq 1 ]; then
         printf '%s\n' "$target"
         status=1
     fi
