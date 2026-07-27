@@ -25,6 +25,8 @@ Before editing existing files, run `~/codexrc/bin/vim-check-modified <file>...` 
 
 Run the check again before a later edit if the set of intended target files changes.
 
+After editing files successfully, run `~/codexrc/bin/vim-checktime` so the active Vim server immediately checks for external changes. Run it once after each coherent batch of file edits. If sandboxing blocks access to the server, rerun the helper with the required escalation. If an active Vim server cannot be queried after retrying, report the failure to the user.
+
 # LaTeX compilation
 
 Whenever compiling a LaTeX document with `latexmk`, enable SyncTeX with `-synctex=1`. After a successful build, verify that the corresponding nonempty `.synctex.gz` file was produced.

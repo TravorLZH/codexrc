@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -eu
+
+server=${VIM_SERVERNAME:-VIM}
+
+if ! command -v vim >/dev/null 2>&1; then
+    exit 0
+fi
+
+if ! servers=$(vim --serverlist 2>/dev/null); then
+    echo "vim-checktime: could not list Vim servers" >&2
+    exit 2
+fi
+
+if ! printf '%s\n' "$servers" | grep -Fqx -- "$server"; then
+    exit 0
+fi
+
+if ! vim --servername "$server" --remote-expr "execute('checktime')" >/dev/null 2>&1; then
+    echo "vim-checktime: could not query Vim server '$server'" >&2
+    exit 2
+fi

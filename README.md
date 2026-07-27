@@ -15,7 +15,8 @@ marketplace data, project trust entries, or machine-specific config.
 ## Vim Integration
 
 Codex checks intended edit targets for unsaved Vim changes with
-`bin/vim-check-modified`. This integration requires Vim compiled with the
+`bin/vim-check-modified` and asks Vim to reload external changes after edits
+with `bin/vim-checktime`. This integration requires Vim compiled with the
 `+clientserver` feature:
 
 ```sh
@@ -31,11 +32,18 @@ if empty(v:servername) && exists('*remote_startserver') && index(v:argv, '--not-
 endif
 ```
 
-To make Vim reload files changed by Codex without a manual `:e`, also add:
+To allow `checktime` to reload unmodified buffers, also add:
 
 ```vim
 set autoread
+```
 
+Codex calls `bin/vim-checktime` immediately after editing. To detect changes
+made by other external programs as well, the following autocommands provide a
+fallback whenever Vim regains focus, enters a buffer, or leaves the cursor
+idle:
+
+```vim
 augroup external_file_reload
   autocmd!
   autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * checktime
@@ -48,13 +56,19 @@ The helper accepts one or more intended edit targets:
 ~/codexrc/bin/vim-check-modified path/to/file another/file
 ```
 
-It exits with status 1 and prints any target files that have unsaved Vim
-changes. It exits successfully when the targets are unmodified or no matching
-Vim server is running. A query failure returns status 2, and incorrect usage
-returns status 64. Set `VIM_SERVERNAME` to use a server name other than `VIM`.
-The client command must run in an environment that can access the same Vim
-client-server endpoint; sandboxed Codex sessions may require approval for the
-helper to connect.
+After editing, Codex runs:
+
+```sh
+~/codexrc/bin/vim-checktime
+```
+
+`vim-check-modified` exits with status 1 and prints any target files that have
+unsaved Vim changes. Both helpers exit successfully when no matching Vim server
+is running and return status 2 when an active server cannot be queried.
+Incorrect `vim-check-modified` usage returns status 64. Set `VIM_SERVERNAME` to
+use a server name other than `VIM`. The client commands must run in an
+environment that can access the same Vim client-server endpoint; sandboxed
+Codex sessions may require approval for the helpers to connect.
 
 ## Install
 
