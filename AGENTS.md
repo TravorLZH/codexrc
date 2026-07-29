@@ -16,7 +16,9 @@ Before editing global Codex instructions or custom skills, check whether `~/code
 
 # Vim buffer safety
 
-Before editing existing files, run `~/codexrc/bin/vim-check-modified <file>...` with every intended existing target file as an argument.
+These Vim helper requirements apply only to text files. Do not run either helper when editing only non-text files.
+
+Before editing existing text files, run `~/codexrc/bin/vim-check-modified <file>...` with every intended existing text target file as an argument.
 
 - Exit status 0 means all listed Vim servers were queried successfully and none of the target files has unsaved changes; proceed.
 - Exit status 1 means one or more target files has unsaved changes in Vim. Do not edit those files. Report the paths printed by the helper and wait for the user to save or discard the changes.
@@ -29,7 +31,7 @@ Before editing existing files, run `~/codexrc/bin/vim-check-modified <file>...` 
 
 Run the check again before a later edit if the set of intended target files changes.
 
-After editing files successfully, run `~/codexrc/bin/vim-checktime` so all listed Vim servers immediately check for external changes. Run it once after each coherent batch of file edits. Exit status 0 means every listed server completed the check. Exit statuses 2 and 3 mean no refresh is needed because Vim is unavailable or no Vim servers are running. Exit statuses 4 and 5 require reading the helper's error message and retrying with the required escalation if sandboxing caused the failure. If a Vim server cannot be queried after retrying, report the failure to the user.
+After editing text files successfully, run `~/codexrc/bin/vim-checktime` so all listed Vim servers immediately check for external changes. Run it once after each coherent batch of text-file edits. Exit status 0 means every listed server completed the check. Exit statuses 2 and 3 mean no refresh is needed because Vim is unavailable or no Vim servers are running. Exit statuses 4 and 5 require reading the helper's error message and retrying with the required escalation if sandboxing caused the failure. If a Vim server cannot be queried after retrying, report the failure to the user.
 
 # LaTeX compilation
 
