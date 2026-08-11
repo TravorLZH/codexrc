@@ -2,6 +2,10 @@
 
 When creating, suggesting, revising, or evaluating a Git commit message, use the `write-commit-message` skill.
 
+# Chinese typography
+
+Do not insert spaces between English names and adjacent Chinese characters. Likewise, do not insert spaces between surrounding text and the `$` delimiters of inline equations.
+
 # Codex customization source of truth
 
 This machine keeps global Codex customizations in `~/codexrc`.
