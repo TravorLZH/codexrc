@@ -37,9 +37,9 @@ Example: write `$x \le y$` and `$x \ge y$`.
 
 - Typeset the differential operator as `\mathrm d`.
 - Do not use a bare italic `d` as the differential operator.
-- Preserve any surrounding spacing unless the user specifies a separate spacing convention.
+- Do not insert `\,` before the differential.
 
-Example: write `\int f(x) \mathrm d x`, not `\int f(x) d x`.
+Example: write `\int f(x)\mathrm d x`, not `\int f(x)\,\mathrm d x` or `\int f(x)d x`.
 
 ## Fractions
 
@@ -69,7 +69,7 @@ Before returning mathematical LaTeX:
 2. Use `equation*` for centered displayed equations that are not labeled; do not use `\[...\]` in TeX documents.
 3. Use `\le` and `\ge`, not `\leq` or `\geq`.
 4. Avoid manual newlines inside the same prose paragraph while preserving TeX syntax line breaks.
-5. Replace each differential operator with `\mathrm d`.
+5. Replace each differential operator with `\mathrm d` and remove any preceding `\,`.
 6. Inspect every fraction.
 7. Retain `\frac` only when both operands are single atomic symbols.
 8. Convert all remaining fractions to grouped `{\over}` form.
