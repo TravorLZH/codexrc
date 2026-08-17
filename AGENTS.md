@@ -39,4 +39,4 @@ After editing text files successfully, run `~/codexrc/bin/vim-checktime` so all 
 
 # LaTeX compilation
 
-Whenever compiling a LaTeX document with `latexmk`, enable SyncTeX with `-synctex=1`. After a successful build, verify that the corresponding nonempty `.synctex.gz` file was produced.
+If Vim is running, assume VimTeX is the active LaTeX compiler: inspect its existing output, log, and quickfix information instead of starting a separate `latexmk` process. Only run `latexmk` independently when Vim is not running or the user explicitly requests it; in that case, enable SyncTeX with `-synctex=1` and, after a successful build, verify that the corresponding nonempty `.synctex.gz` file was produced.
