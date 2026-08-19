@@ -84,11 +84,12 @@ After editing, Codex runs:
 
 `vim-check-modified` exits with status 1 and prints any target files that have
 unsaved Vim changes. Both helpers exit successfully when no matching Vim server
-is running and return status 2 when an active server cannot be queried.
-Incorrect `vim-check-modified` usage returns status 64. Set `VIM_SERVERNAME` to
-use a server name other than `VIM`. The client commands must run in an
-environment that can access the same Vim client-server endpoint; sandboxed
-Codex sessions may require approval for the helpers to connect.
+or Vim executable is available. They return status 2 when they cannot list or
+query the available servers; `vim-check-modified` also uses status 2 when a
+target path cannot be resolved. Incorrect `vim-check-modified` usage returns
+status 64. The client commands must run in an environment that can access the
+same Vim client-server endpoints; sandboxed Codex sessions may require approval
+for the helpers to connect.
 
 ## Install
 

@@ -1,25 +1,27 @@
 #!/bin/sh
 #
 # vim-checktime - make Vim check its buffers for external file changes
+#
+# Exit statuses:
+#   0  The refresh completed, or Vim or its servers are unavailable
+#   2  The refresh could not be completed
 
 set -eu
 
 # No Vim executable means there is no editor state to refresh.
 if ! command -v vim >/dev/null 2>&1; then
-    echo "vim-checktime: Vim executable not found" >&2
-    exit 2
+    exit 0
 fi
 
 if ! servers=$(vim --serverlist 2>&1); then
     echo "vim-checktime: could not list Vim servers" >&2
     printf '%s\n' "$servers" >&2
-    exit 4
+    exit 2
 fi
 
 # No servers is normal when Vim is not running.
 if [ -z "$servers" ]; then
-    echo "vim-checktime: no Vim servers found" >&2
-    exit 3
+    exit 0
 fi
 
 for server in $servers; do
@@ -29,7 +31,7 @@ for server in $servers; do
     if ! response=$(vim --servername "$server" --remote-expr "execute('checktime | redraw!') . \"\\n$marker\"" 2>&1); then
         echo "vim-checktime: could not query Vim server '$server'" >&2
         printf '%s\n' "$response" >&2
-        exit 5
+        exit 2
     fi
     case "$response" in
         *"$marker")
@@ -37,7 +39,7 @@ for server in $servers; do
         *)
             echo "vim-checktime: Vim server '$server' returned no success marker" >&2
             printf '%s\n' "$response" >&2
-            exit 5
+            exit 2
             ;;
     esac
 done

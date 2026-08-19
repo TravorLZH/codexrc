@@ -1,6 +1,12 @@
 #!/bin/sh
 #
 # vim-check-modified - report target files with unsaved changes in Vim
+#
+# Exit statuses:
+#   0  No target is modified, or Vim or its servers are unavailable
+#   1  One or more targets have unsaved changes
+#   2  The check could not be completed
+#   64 Incorrect invocation
 
 set -eu
 
@@ -11,20 +17,18 @@ fi
 
 # No Vim executable means there is no editor state to inspect.
 if ! command -v vim >/dev/null 2>&1; then
-    echo "vim-check-modified: Vim executable not found" >&2
-    exit 2
+    exit 0
 fi
 
 if ! servers=$(vim --serverlist 2>&1); then
     echo "vim-check-modified: could not list Vim servers" >&2
     printf '%s\n' "$servers" >&2
-    exit 4
+    exit 2
 fi
 
 # No servers is normal when Vim is not running.
 if [ -z "$servers" ]; then
-    echo "vim-check-modified: no Vim servers found" >&2
-    exit 3
+    exit 0
 fi
 
 newline='
@@ -37,7 +41,7 @@ for server in $servers; do
     if ! response=$(vim --servername "$server" --remote-expr "$expr" 2>&1); then
         echo "vim-check-modified: could not query Vim server '$server'" >&2
         printf '%s\n' "$response" >&2
-        exit 5
+        exit 2
     fi
 
     # Vim can exit successfully even when --remote-expr cannot connect. Validate
@@ -58,7 +62,7 @@ for server in $servers; do
         *)
             echo "vim-check-modified: Vim server '$server' returned no valid success marker" >&2
             printf '%s\n' "$response" >&2
-            exit 5
+            exit 2
             ;;
     esac
 done
@@ -69,7 +73,7 @@ for target in "$@"; do
     target_name=$(basename "$target")
     if ! target_dir=$(CDPATH= cd -P "$(dirname "$target")" 2>/dev/null && pwd); then
         echo "vim-check-modified: could not resolve target '$target'" >&2
-        exit 6
+        exit 2
     fi
     target=$target_dir/$target_name
 
