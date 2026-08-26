@@ -22,6 +22,8 @@ Before editing global Codex instructions or custom skills, check whether `~/code
 
 These Vim helper requirements apply only to text files. Do not run either helper when editing only non-text files.
 
+Always execute both Vim helper scripts outside the sandbox.
+
 Run `vim-check-modified` and `vim-checktime` as standalone shell commands, separate from editing commands and other helper commands. Do not combine them with `&&`, `;`, pipes, command substitutions, or grouped commands, so command-specific execution permissions can match reliably.
 
 Before editing existing text files, run `~/codexrc/bin/vim-check-modified <file>...` with every intended existing text target file as an argument.
