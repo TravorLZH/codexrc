@@ -19,6 +19,7 @@ description: Draft or suggest Git commit messages in TravorLZH's established sty
 - Do not add a scope prefix, issue number, emoji, trailing period, or AI attribution to the subject.
 - Use the subject alone for a trivial or self-explanatory change.
 - For a non-trivial change, add a body after the subject.
+- Hard-wrap body paragraphs and bullets at 72 columns with actual newline characters, including messages shown in replies or passed to Git. Keep the subject on one line. Indent bullet continuation lines by two spaces, counting that indentation toward the limit; leave indivisible tokens such as long paths or URLs intact when they exceed the limit.
 - When a change is major, architectural, cross-cutting, migration-oriented, or otherwise needs context beyond its file-level details, begin the body with a concise explanatory paragraph. Summarize the commit's intent and user or system impact in one or two sentences; describe the result rather than the implementation process.
 - Follow the explanatory paragraph, or the subject when no paragraph is needed, with file-oriented bullet lines in this form:
 
@@ -39,7 +40,8 @@ Use this pattern to create a commit from the command line when the message has a
 cat > /tmp/commit-message.txt <<'EOF'
 Fix request timeout handling
 
-* src/client.ts: Apply the configured timeout to fetch requests and surface timeout failures as retryable errors.
+* src/client.ts: Apply the configured timeout to fetch requests and
+  surface timeout failures as retryable errors.
 * test/client.test.ts: Cover timeout propagation and retry classification.
 EOF
 git commit -F /tmp/commit-message.txt
@@ -51,15 +53,21 @@ git show --format=%B --no-patch HEAD
 ```text
 Fix release cleanup permissions
 
-* DEPLOY.md: Preserve group write permissions, keep cleanup failures from invalidating successful deployments, and document repairing existing releases.
+* DEPLOY.md: Preserve group write permissions, keep cleanup failures from
+  invalidating successful deployments, and document repairing existing
+  releases.
 ```
 
 ```text
 Modularize and assemble Gitweb
 
-Separate site-specific behavior from the upstream-derived CGI while preserving a self-contained deployment artifact. Build the runtime CGI from modular sources so development remains testable and production keeps its single-file layout.
+Separate site-specific behavior from the upstream-derived CGI while
+preserving a self-contained deployment artifact. Build the runtime CGI
+from modular sources so development remains testable and production keeps
+its single-file layout.
 
-* gitweb.perl: Retain the upstream-derived entry point and delegate custom behavior to focused modules.
+* gitweb.perl: Retain the upstream-derived entry point and delegate custom
+  behavior to focused modules.
 * build-gitweb: Assemble and validate the deployable CGI.
 ```
 
