@@ -21,7 +21,8 @@ prefix_rule(
     decision = "allow",
     justification = "Allow local Vim buffer safety check before edits",
     match = [
-        "$vim_check_modified AGENTS.md",
+        "$vim_check_modified install-rules.sh",
+        "$vim_check_modified ../project/src/main.py /tmp/manuscript.tex",
     ],
 )
 
