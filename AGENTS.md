@@ -4,6 +4,10 @@ When creating, suggesting, revising, or evaluating a Git commit message, use the
 
 After creating or amending a Git commit, always include its exact full commit message (subject and body) in a fenced code block in your final response. Read it back from Git to ensure accuracy.
 
+# C style
+
+When writing, editing, or reviewing C source, headers, or code snippets, use the `format-c-code` skill.
+
 # Chinese typography
 
 Do not insert spaces between English names and adjacent Chinese characters. Likewise, do not insert spaces between surrounding text and the `$` delimiters of inline equations.

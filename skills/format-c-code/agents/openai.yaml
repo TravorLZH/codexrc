@@ -1,0 +1,4 @@
+interface:
+  display_name: "C Style Conventions"
+  short_description: "Apply preferred C formatting and naming conventions"
+  default_prompt: "Use $format-c-code to apply my C style conventions to this code."

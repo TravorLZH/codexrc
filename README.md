@@ -15,6 +15,13 @@ marketplace data, project trust entries, or machine-specific config.
 
 ## Included Skills
 
+### `format-c-code`
+
+Applies personal C conventions for indentation, spacing, braces, naming,
+struct declarations, and zero tests when writing, editing, or reviewing C
+code. See [`skills/format-c-code/SKILL.md`](skills/format-c-code/SKILL.md)
+for the complete rules.
+
 ### `format-latex-equations`
 
 Applies consistent mathematical LaTeX conventions when Codex writes, edits,
