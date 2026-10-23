@@ -28,7 +28,7 @@ Before editing global Codex instructions or custom skills, check whether `~/code
 
 These Vim helper requirements apply only to text files. Do not run either helper when editing only non-text files.
 
-Always execute both Vim helper scripts outside the sandbox.
+Always execute both Vim helper scripts outside the sandbox. Also run every check for running editors or compilers outside the sandbox, including `ps`, `pgrep`, and `vim --serverlist`. Sandboxed process listings or server queries may hide host processes; never treat an empty sandboxed result as evidence that Vim or a compiler is not running. A successful Vim helper exit status alone does not establish that Vim is absent.
 
 Run `vim-check-modified` and `vim-checktime` as standalone shell commands, separate from editing commands and other helper commands. Do not combine them with `&&`, `;`, pipes, command substitutions, or grouped commands, so command-specific execution permissions can match reliably.
 
@@ -47,4 +47,4 @@ After editing text files successfully, run `vim-checktime` using its resolved ab
 
 # LaTeX compilation
 
-If Vim is running, assume VimTeX is the active LaTeX compiler: inspect its existing output, log, and quickfix information instead of starting a separate `latexmk` process. Only run `latexmk` independently when Vim is not running or the user explicitly requests it; in that case, enable SyncTeX with `-synctex=1` and, after a successful build, verify that the corresponding nonempty `.synctex.gz` file was produced.
+Before starting an independent LaTeX build, check outside the sandbox whether Vim or a LaTeX compiler is running. If the check cannot be completed, do not assume they are absent or start a separate compiler. If Vim is running, assume VimTeX is the active LaTeX compiler: inspect its existing output, log, and quickfix information instead of starting a separate `latexmk` process. Only run `latexmk` independently when Vim is not running or the user explicitly requests it; in that case, enable SyncTeX with `-synctex=1` and, after a successful build, verify that the corresponding nonempty `.synctex.gz` file was produced.
