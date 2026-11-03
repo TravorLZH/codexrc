@@ -14,6 +14,7 @@ description: Draft or suggest Git commit messages in TravorLZH's established sty
 ## Write the message
 
 - Write in English.
+- Quote command names and code identifiers in commit-message prose with an opening backtick and a closing apostrophe, as in `` `global' ``. Use this form whenever quoting technical text, rather than paired Markdown backticks or straight single quotes. Keep file-oriented bullet paths and the standard Git-generated merge subject in their prescribed formats.
 - Use a concise, single-line, sentence-case subject beginning with an imperative verb such as `Add`, `Fix`, `Remove`, `Rename`, `Configure`, `Document`, `Clarify`, `Protect`, `Restrict`, `Centralize`, `Share`, or `Stop`.
 - Do not use a Conventional Commits prefix such as `feat:`, `fix:`, or `chore:`.
 - Do not add a scope prefix, issue number, emoji, trailing period, or AI attribution to the subject.
@@ -25,6 +26,7 @@ description: Draft or suggest Git commit messages in TravorLZH's established sty
 
   `* path/to/file: Describe what changed and, when useful, why.`
 
+- For file renames, use `* oldname -> newname` instead of a new-path bullet describing the move. If the rename also changes content, append `: Describe the changes.`
 - Group closely related changes to the same file in one bullet when practical.
 - Write consecutive bullet lines without blank lines between them.
 - Begin body descriptions with imperative verbs and describe behavior, configuration, or documentation impact precisely.
