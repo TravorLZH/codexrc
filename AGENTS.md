@@ -12,17 +12,17 @@ When writing, editing, or reviewing C source, headers, or code snippets, use the
 
 Do not insert spaces between English names and adjacent Chinese characters. Likewise, do not insert spaces between surrounding text and the `$` delimiters of inline equations.
 
-# Codex customization source of truth
+# Agent customization source of truth
 
-This machine keeps global Codex customizations in `~/codexrc`.
+This machine keeps global agent customizations in `~/codexrc`.
 
-When creating, editing, or reviewing global Codex instructions or custom skills, modify the files in `~/codexrc` directly:
+When creating, editing, or reviewing global agent instructions or custom skills, modify the files in `~/codexrc` directly:
 
-- Edit `~/codexrc/AGENTS.md` for global Codex instructions.
+- Edit `~/codexrc/AGENTS.md` for global agent instructions.
 - Edit `~/codexrc/skills/<skill-name>/` for custom skills.
-- Do not edit generated Codex state, auth, logs, sessions, caches, or plugin runtime files for customization changes.
+- Do not edit generated agent state, auth, logs, sessions, caches, or plugin runtime files for customization changes.
 
-Before editing global Codex instructions or custom skills, check whether `~/codexrc` has uncommitted changes or is behind `origin/master`. Do not pull, rebase, or overwrite local changes unless the user asks.
+Before editing global agent instructions or custom skills, check whether `~/codexrc` has uncommitted changes or is behind `origin/master`. Do not pull, rebase, or overwrite local changes unless the user asks.
 
 # Vim buffer safety
 

@@ -1,17 +1,24 @@
 # codexrc
 
-Portable Codex customization for personal use across machines.
+Portable agent customization for personal use across machines. Written to be
+agent-agnostic: `AGENTS.md` and the `SKILL.md` files under `skills/` avoid
+naming Codex specifically, so Claude Code picks them up too when this repo is
+open as the working directory, the same way it reads any project's `AGENTS.md`
+and skills.
 
-This repository stores only durable Codex behavior:
+This repository stores only durable agent behavior:
 
 - `AGENTS.md` for global instructions.
 - `bin/` for narrowly scoped helper commands used by those instructions.
-- `skills/` for custom reusable Codex skills.
+- `skills/` for custom reusable skills, written in the shared `SKILL.md`
+  format both Codex and Claude Code understand.
 - `install.sh` for linking this repo into `~/.codex`.
 - `install-rules.sh` for generating local Codex command approval rules.
+- `install-claude.sh` for linking this repo into `~/.claude`.
+- `install-claude-rules.sh` for merging local Claude Code command permissions.
 
-It intentionally does not store Codex auth, logs, sessions, runtime state, caches,
-marketplace data, project trust entries, or machine-specific config.
+It intentionally does not store agent auth, logs, sessions, runtime state,
+caches, marketplace data, project trust entries, or machine-specific config.
 
 ## Included Skills
 
@@ -98,7 +105,7 @@ status 64. The client commands must run in an environment that can access the
 same Vim client-server endpoints; sandboxed Codex sessions may require approval
 for the helpers to connect.
 
-## Install
+## Install (Codex)
 
 Clone the repository to `~/codexrc`, then run the installer:
 
@@ -134,14 +141,52 @@ If an existing target is present, it is moved to:
 ~/.codex/backups/<timestamp>/
 ```
 
+## Install (Claude Code)
+
+With the repository cloned to `~/codexrc`, run:
+
+```sh
+./install-claude.sh
+```
+
+The installer creates symlinks:
+
+```text
+~/.claude/CLAUDE.md -> ~/codexrc/AGENTS.md
+~/.claude/skills/<skill> -> ~/codexrc/skills/<skill>
+```
+
+If an existing target is present, it is moved to:
+
+```text
+~/.claude/backups/<timestamp>/
+```
+
+To allow the Vim helper commands and the host editor/compiler checks without
+a permission prompt, run:
+
+```sh
+./install-claude-rules.sh
+```
+
+This requires `jq` and merges the required entries into
+`permissions.allow` in `~/.claude/settings.json`, preserving the rest of that
+file's contents. It backs up the previous `settings.json` to
+`~/.claude/backups/<timestamp>/` before writing, and re-running it is a no-op
+once the entries are present.
+
+Both scripts honor `CLAUDE_CONFIG_DIR` if it is set, the same way the Codex
+installers honor `CODEX_HOME`.
+
 ## Update
 
-Pull changes and rerun the installer:
+Pull changes and rerun the installer(s) for whichever agent you use:
 
 ```sh
 cd ~/codexrc
 git pull
-./install.sh
+./install.sh            # Codex
+./install-claude.sh     # Claude Code
 ```
 
 ## Add A Skill
