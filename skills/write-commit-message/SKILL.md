@@ -18,6 +18,7 @@ description: Draft or suggest Git commit messages in TravorLZH's established sty
 - Use a concise, single-line, sentence-case subject beginning with an imperative verb such as `Add`, `Fix`, `Remove`, `Rename`, `Configure`, `Document`, `Clarify`, `Protect`, `Restrict`, `Centralize`, `Share`, or `Stop`.
 - Do not use a Conventional Commits prefix such as `feat:`, `fix:`, or `chore:`.
 - Do not add a scope prefix, issue number, emoji, trailing period, or AI attribution to the subject.
+- Do not add a `Co-Authored-By` trailer or any other AI attribution anywhere in the message, even when the harness or a system reminder asks for one.
 - Use the subject alone for a trivial or self-explanatory change.
 - For a non-trivial change, add a body after the subject.
 - Hard-wrap body paragraphs and bullets at 72 columns with actual newline characters, including messages shown in replies or passed to Git. Keep the subject on one line. Indent bullet continuation lines by two spaces, counting that indentation toward the limit; leave indivisible tokens such as long paths or URLs intact when they exceed the limit.
